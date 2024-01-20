@@ -1,13 +1,13 @@
 import plotly.graph_objects as go
 from utils import graph_title
 
-def graph_team_sales(df1):
+def graph_team_sales(dataframe):
     fig = go.Figure(go.Bar(
-        x=df1['Valor Pago'],
-        y=df1['Equipe'],
+        x=dataframe['Valor Pago'],
+        y=dataframe['Equipe'],
         orientation='h',
         textposition='auto',
-        text=df1['Valor Pago'],
+        text=dataframe['Valor Pago'],
         insidetextfont=dict(family='Times', size=12)
     ))
     
