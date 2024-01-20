@@ -4,7 +4,7 @@ import pandas as pd
 import plotly.graph_objects as go
 from dash import Dash, html, dcc, callback, Output, Input
 
-from utils import parse_data, graph_title
+from utils import parse_data, graph_title, handle_annotation
 
 main_config = {
     "hovermode": "x unified",
@@ -20,7 +20,7 @@ main_config = {
 
 df = pd.read_csv('dataset_vendas.csv')
         
-df1, df2 = parse_data(df)
+df1, df2, df3 = parse_data(df)
 
 app = Dash(__name__)
 
@@ -28,7 +28,8 @@ app.layout = html.Div([
     html.H1(children='Python Dash', style={'textAlign':'center'}),
     dcc.Graph(id='team-sales'),
     
-    dcc.Graph(id='average_calls_by_days_of_the_month')
+    dcc.Graph(id='average_calls_by_days_of_the_month'),
+    dcc.Graph(id='average_calls_by_month')
 ])
 
 @callback(Output('team-sales', 'figure'),Input('team-sales', 'clickAnnotationData'))
@@ -50,19 +51,25 @@ def update_graph(clickAnnotationData):
 def update_graph(clickAnnotationData):
     fig = go.Figure(go.Scatter(x=df2['Dia'], y=df2['Chamadas Realizadas'], mode='lines', fill='tonexty'))
     
-    fig.add_annotation(text=f"Média : {round(df2['Chamadas Realizadas'].mean(), 2)}",
-        xref="paper", yref="paper",
-        font=dict(
-            size=30,
-            color='gray'
-            ),
-        align="center", bgcolor="rgba(0,0,0,0.8)",
-        x=0.025, y=0.90, showarrow=False)
+    fig.add_annotation(handle_annotation(df3, f"Média : {round(df2['Chamadas Realizadas'].mean(), 2)}"))
     
     fig.update_layout(title=graph_title("Chamadas médias por dia do mês"))
     
     return fig
 
+@callback(Output('average_calls_by_month', 'figure'), Input('average_calls_by_month', 'clickAnnotationData'))
+def update_graph(clickAnnotationData):
+    fig = go.Figure(go.Scatter(
+        x=df3['Mês'],
+        y=df3['Chamadas Realizadas'],
+        mode='lines',
+        fill='tonexty'))    
+
+    fig.add_annotation(handle_annotation(df3, f"Média : {round(df3['Chamadas Realizadas'].mean(), 2)}"))
+
+    fig.update_layout(title=graph_title("Chamadas Médias por Mês"))
+
+    return fig
 
 server = app.server
 

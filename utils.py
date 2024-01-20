@@ -17,13 +17,15 @@ def parse_data(data):
     data1 = data.groupby('Equipe')['Valor Pago'].sum().reset_index()
 
     data2 = data.groupby('Dia')['Chamadas Realizadas'].sum().reset_index()
+    
+    data3 = data.groupby('Mês')['Chamadas Realizadas'].sum().reset_index()
 
-    return data1, data2
+    return data1, data2, data3
 
 def graph_title(title):
     return dict(text=f"{title}", font=dict(size=24))
 
-def create_average_annotation(df, text):
+def handle_annotation(df, text):
 
     annotation = go.layout.Annotation(
         text=text,
