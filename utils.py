@@ -14,18 +14,12 @@ def parse_data(data):
 
     data['Status de Pagamento'] = data['Status de Pagamento'].map({'Pago': 1, 'Não pago': 0}).astype(int)
 
-    data1 = data.groupby('Equipe')['Valor Pago'].sum().reset_index()
-
-    data2 = data.groupby('Dia')['Chamadas Realizadas'].sum().reset_index()
-    
-    data3 = data.groupby('Mês')['Chamadas Realizadas'].sum().reset_index()
-
-    return data1, data2, data3
+    return data
 
 def graph_title(title):
     return dict(text=f"{title}", font=dict(size=24))
 
-def handle_annotation(df, text):
+def handle_annotation(text):
 
     annotation = go.layout.Annotation(
         text=text,
