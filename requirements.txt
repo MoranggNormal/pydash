@@ -14,7 +14,7 @@ colorama==0.4.4
 comm==0.2.1
 command-not-found==0.3
 contourpy==1.2.0
-cryptography==3.4.8
+cryptography==41.0.6
 cupshelpers==1.0
 cycler==0.12.1
 dash==2.14.2
