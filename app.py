@@ -89,22 +89,22 @@ app.layout = dbc.Container([
         ),
     
     dbc.Row(
-        dbc.Card([
-            dbc.Row([
-                dbc.Col(
-                    dcc.Graph(id='top_consultants_plus_team_by_value_bar_chart'),
-                    width={'size': 6},
-                ),
-                dbc.Col(
-                    dcc.Graph(id='top_consultants_plus_team_by_value'),
-                    width={'size': 6},
-                ),
-            ],
-                    className="w-100",
-                ),
-            ],
+        dbc.Col(
+            dbc.Card([
+                dbc.Row([
+                    dbc.Col(
+                        dcc.Graph(id='top_consultants_plus_team_by_value_bar_chart'),
+                        width={'size': 12},  md={'size': 6}
+                    ),
+                    dbc.Col(
+                        dcc.Graph(id='top_consultants_plus_team_by_value'),
+                        width={'size': 12}, md={'size': 6}
+                    ),
+                ]),
+                ],
+            ), width={'size': 12}, md={'size': 8}, className="mx-auto"
         ),
-        className="w-75 mt-5 mx-auto"
+        className="w-100 mt-5 mx-auto"
     ),
         
     dbc.Row([
