@@ -58,59 +58,102 @@ app.layout = dbc.Container([
             html.A(
                 dbc.Row(
                     [
-                        dbc.Col(dbc.NavbarBrand("Python Dash", className="ms-2")),
+                        dbc.Col(dbc.NavbarBrand("Python Dash")),
                     ],
-                    align="center",
                     className="g-0",
                 ),
                 href="https://github.com/MoranggNormal/pydash",
                 style={"textDecoration": "none"},
             ),
-            dbc.Row([
-                    dbc.Col(
-                        dcc.Dropdown(
-                        options=team_options,
-                        value='all_teams',
-                        clearable=False,
-                        id='current_team'
-                    )),
-                    dbc.Col(
-                        dcc.Dropdown(
-                            options=month_options,
-                            value='all_months',
-                            clearable=False,
-                            id='month_team'
-                    )),
-                ],
-                className="g-2 ms-auto flex-nowrap mt-3 mt-md-0",
-                align="center",
-                ),
             ], className="my-5"
         ),
+
+    dbc.Row([
+            dbc.Col(
+                dcc.Dropdown(
+                options=team_options,
+                value='all_teams',
+                clearable=False,
+                id='current_team'
+            )),
+            dbc.Col(
+                dcc.Dropdown(
+                    options=month_options,
+                    value='all_months',
+                    clearable=False,
+                    id='month_team'
+            )),
+        ],
+        className="w-75 g-2 mx-auto flex-nowrap mt-3 mt-md-0",
+        align="center",
+        ),
     
-    dbc.Card(
-        dbc.Row([
-            dbc.Col(
-                dcc.Graph(id='top_consultants_plus_team_by_value_bar_chart'),
-                width={'size': 6}
-            ),
-            dbc.Col(
-                dcc.Graph(id='top_consultants_plus_team_by_value'),
-                width={'size': 6}
-            ),
-        ], className="w-75 mx-auto flex-nowrap"),
+    dbc.Row(
+        dbc.Card([
+            dbc.Row([
+                dbc.Col(
+                    dcc.Graph(id='top_consultants_plus_team_by_value_bar_chart'),
+                    width={'size': 6},
+                ),
+                dbc.Col(
+                    dcc.Graph(id='top_consultants_plus_team_by_value'),
+                    width={'size': 6},
+                ),
+            ],
+                    className="w-100",
+                ),
+            ],
+        ),
+        className="w-75 mt-5 mx-auto"
     ),
         
-
-    dcc.Graph(id='team_sales'),
-    dcc.Graph(id='average_calls_by_days_of_the_month'),
-    dcc.Graph(id='average_calls_by_month'),
+    dbc.Row([
+        dbc.Col(
+            dbc.Row([
+                    dbc.Card(
+                        dcc.Graph(id="average_calls_by_days_of_the_month"),
+                    ),
+                    dbc.Card(
+                        dcc.Graph(id="average_calls_by_month"),
+                        className="mt-2",
+                    ),
+                ]),
+            width={"size": 4},
+        ),
+        dbc.Col(
+            dbc.Row([
+                dbc.Col([
+                    dbc.Card(
+                        dcc.Graph(id="team_sales"),
+                    ),
+                ],  width={"size": 12}), 
+                dbc.Col([
+                    dbc.Card(
+                        dcc.Graph(id="earnings_per_month_plus_segregation_by_team"),
+                        className="mt-2"
+                    ),
+                ],  width={"size": 12}), 
+            ]),
+            width={"size": 5},
+        ),
+        dbc.Col(
+            dbc.Col([
+                dbc.Card(
+                    dcc.Graph(id="indicators_best_consultant"),
+                    ),
+                dbc.Card(
+                    dcc.Graph(id="indicators_best_equip"),
+                    className="mt-2"
+                    ),
+                ]),
+            
+            width={"size": 3},
+        )], className="w-75 mx-auto mt-5",
+    ),
+        
     dcc.Graph(id='amounts_paid_through_advertising'),
     dcc.Graph(id='advertising_on_piechart'),
-    dcc.Graph(id='earnings_per_month_plus_segregation_by_team'),
     dcc.Graph(id='paid_and_not_paid'),
-    dcc.Graph(id='indicators_best_consultant'),
-    dcc.Graph(id='indicators_best_equip'),
     dcc.Graph(id='indicators_total_earnings'),
     dcc.Graph(id='indicators_total_calls'),
 

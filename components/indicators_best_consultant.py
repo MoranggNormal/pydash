@@ -10,6 +10,5 @@ def graph_indicators_best_consultant(dataframe):
             number = {'prefix': "R$"},
             delta = {'relative': True, 'valueformat': '.1%', 'reference': dataframe['Valor Pago'].mean()}
     ))
-    fig.update_layout(title=graph_title("Indicators - Melhor consultor"))
     
     return fig

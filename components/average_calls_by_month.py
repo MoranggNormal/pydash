@@ -10,6 +10,4 @@ def graph_average_calls_by_month(dataframe):
 
     fig.add_annotation(handle_annotation(f"Média : {round(dataframe['Chamadas Realizadas'].mean(), 2)}"))
 
-    fig.update_layout(title=graph_title("Chamadas Médias por Mês"))
-
     return fig

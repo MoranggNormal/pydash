@@ -11,6 +11,4 @@ def graph_team_sales(dataframe):
         insidetextfont=dict(family='Times', size=12)
     ))
     
-    fig.update_layout(title=graph_title("Vendas por equipe"))
-
     return fig
