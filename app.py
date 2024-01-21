@@ -3,6 +3,8 @@ import os
 import pandas as pd
 from dash import Dash, html, dcc, callback, Output, Input
 
+import dash_bootstrap_components as dbc
+
 from utils import parse_data
 
 from components.average_calls_by_month import graph_average_calls_by_month
@@ -31,27 +33,75 @@ main_config = {
     "margin": {"l":0, "r":0, "t":20, "b":0}
 }
 
-df = pd.read_csv('dataset_vendas.csv')
-        
-parsed_data = parse_data(df)
+month_mapping = {'Jan': 1, 'Fev': 2, 'Mar': 3, 'Abr': 4,
+             'Mai': 5, 'Jun': 6, 'Jul': 7, 'Ago': 8,
+             'Set': 9, 'Out': 10, 'Nov': 11, 'Dez': 12}
 
-app = Dash(__name__)
+df = pd.read_csv('dataset_vendas.csv')
+parsed_data = parse_data(df, month_mapping)
 
 team_options = [{'label': 'Todas as Equipes', 'value': 'all_teams'}]
 for team in parsed_data['Equipe'].unique():
     team_options.append({'label': team, 'value': team})
 
-app.layout = html.Div([
-    html.H1(children='Python Dash', style={'textAlign':'center'}),
+month_options = [{'label': 'Mês', 'value': 'all_months'}]
+for month in parsed_data['Mês'].unique():
+    month_key = [key for key, value in month_mapping.items() if value == month][0]
+
+    month_options.append({'label': month_key, 'value': month})
     
-    html.Div([
-        dcc.Dropdown(
-            options=team_options,
-            value='all_teams',
-            clearable=False,
-            id='current_team'
-        )]),
+app = Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
+
+app.layout = dbc.Container([
+    dbc.Container(
+        [
+            html.A(
+                dbc.Row(
+                    [
+                        dbc.Col(dbc.NavbarBrand("Python Dash", className="ms-2")),
+                    ],
+                    align="center",
+                    className="g-0",
+                ),
+                href="https://github.com/MoranggNormal/pydash",
+                style={"textDecoration": "none"},
+            ),
+            dbc.Row([
+                    dbc.Col(
+                        dcc.Dropdown(
+                        options=team_options,
+                        value='all_teams',
+                        clearable=False,
+                        id='current_team'
+                    )),
+                    dbc.Col(
+                        dcc.Dropdown(
+                            options=month_options,
+                            value='all_months',
+                            clearable=False,
+                            id='month_team'
+                    )),
+                ],
+                className="g-2 ms-auto flex-nowrap mt-3 mt-md-0",
+                align="center",
+                ),
+            ], className="my-5"
+        ),
     
+    dbc.Card(
+        dbc.Row([
+            dbc.Col(
+                dcc.Graph(id='top_consultants_plus_team_by_value_bar_chart'),
+                width={'size': 6}
+            ),
+            dbc.Col(
+                dcc.Graph(id='top_consultants_plus_team_by_value'),
+                width={'size': 6}
+            ),
+        ], className="w-75 mx-auto flex-nowrap"),
+    ),
+        
+
     dcc.Graph(id='team_sales'),
     dcc.Graph(id='average_calls_by_days_of_the_month'),
     dcc.Graph(id='average_calls_by_month'),
@@ -63,10 +113,15 @@ app.layout = html.Div([
     dcc.Graph(id='indicators_best_equip'),
     dcc.Graph(id='indicators_total_earnings'),
     dcc.Graph(id='indicators_total_calls'),
-    dcc.Graph(id='top_consultants_plus_team_by_value'),
-    dcc.Graph(id='top_consultants_plus_team_by_value_bar_chart')
 
-])
+], fluid=True)
+
+@callback(Output('top_consultants_plus_team_by_value_bar_chart', 'figure'), Input('top_consultants_plus_team_by_value_bar_chart', 'clickAnnotationData'))
+def update_graph_top_consultants_plus_team_by_value_bar_chart(clickAnnotationData):
+    data = parsed_data.groupby(['Equipe', 'Consultor'])['Valor Pago'].sum()
+    data = data.sort_values(ascending=False)
+    data = data.groupby('Equipe').head(1).reset_index()
+    return graph_top_consultants_plus_team_by_value_bar_chart(data)
 
 @callback(Output('team_sales', 'figure'),Input('team_sales', 'clickAnnotationData'))
 def update_graph_team_sales(clickAnnotationData):
@@ -167,13 +222,6 @@ def update_graph_top_consultants_plus_team_by_value(clickAnnotationData):
     data = data.sort_values(ascending=False)
     data = data.groupby('Equipe').head(1).reset_index()
     return graph_top_consultants_plus_team_by_value(data)
-
-@callback(Output('top_consultants_plus_team_by_value_bar_chart', 'figure'), Input('top_consultants_plus_team_by_value_bar_chart', 'clickAnnotationData'))
-def update_graph_top_consultants_plus_team_by_value_bar_chart(clickAnnotationData):
-    data = parsed_data.groupby(['Equipe', 'Consultor'])['Valor Pago'].sum()
-    data = data.sort_values(ascending=False)
-    data = data.groupby('Equipe').head(1).reset_index()
-    return graph_top_consultants_plus_team_by_value_bar_chart(data)
 
 server = app.server
 
