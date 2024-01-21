@@ -102,7 +102,7 @@ app.layout = dbc.Container([
                     ),
                 ]),
                 ],
-            ), width={'size': 12}, md={'size': 8}, className="mx-auto"
+            ), className="mx-auto"
         ),
         className="w-100 mt-5 mx-auto"
     ),
