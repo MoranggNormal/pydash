@@ -110,46 +110,48 @@ app.layout = dbc.Container([
     dbc.Row([
         dbc.Col(
             dbc.Row([
-                    dbc.Card(
-                        dcc.Graph(id="average_calls_by_days_of_the_month"),
-                    ),
-                    dbc.Card(
-                        dcc.Graph(id="average_calls_by_month"),
-                        className="mt-2",
-                    ),
-                ]),
-            width={"size": 4},
+                dbc.Card(
+                    dcc.Graph(id="average_calls_by_days_of_the_month"),
+                ),
+                dbc.Card(
+                    dcc.Graph(id="average_calls_by_month"),
+                    className="mt-2",
+                ),
+            ]),
+            width={"size": 12}, md={"size":4}
         ),
         dbc.Col(
             dbc.Row([
-                dbc.Col([
+                dbc.Col(
                     dbc.Card(
                         dcc.Graph(id="team_sales"),
                     ),
-                ],  width={"size": 12}), 
-                dbc.Col([
+                width={"size": 12}),
+                dbc.Col(
                     dbc.Card(
                         dcc.Graph(id="earnings_per_month_plus_segregation_by_team"),
                         className="mt-2"
                     ),
-                ],  width={"size": 12}), 
+                width={"size": 12}),
             ]),
-            width={"size": 5},
+            width={"size": 12}, md={"size":5}
         ),
         dbc.Col(
-            dbc.Col([
+            dbc.Row([
                 dbc.Card(
                     dcc.Graph(id="indicators_best_consultant"),
-                    ),
+                ),
                 dbc.Card(
                     dcc.Graph(id="indicators_best_equip"),
                     className="mt-2"
-                    ),
-                ]),
-            
-            width={"size": 3},
-        )], className="w-75 mx-auto mt-5",
+                ),
+            ]),
+            width={"size": 12}, md={"size":3},
+        ),
+        ],
+        className="w-100 mx-auto mt-5",
     ),
+
         
     dcc.Graph(id='amounts_paid_through_advertising'),
     dcc.Graph(id='advertising_on_piechart'),
