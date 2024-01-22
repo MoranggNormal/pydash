@@ -1,7 +1,7 @@
 import plotly.graph_objects as go
 from utils import graph_title
 
-def graph_indicators_best_equip(dataframe):
+def graph_indicators_best_equip(dataframe, theme):
     fig = go.Figure()
     
     fig.add_trace(go.Indicator(mode='number+delta',
@@ -10,5 +10,8 @@ def graph_indicators_best_equip(dataframe):
             number = {'prefix': "R$"},
             delta = {'relative': True, 'valueformat': '.1%', 'reference': dataframe['Valor Pago'].mean()}
     ))
-    
+
+    if theme:
+        fig.update_layout(template="plotly_dark")
+         
     return fig

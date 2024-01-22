@@ -1,7 +1,7 @@
 import os
 
 import pandas as pd
-from dash import Dash, html, dcc, callback, Output, Input
+from dash import Dash, html, dcc, callback, Output, Input, clientside_callback
 
 import dash_bootstrap_components as dbc
 
@@ -50,7 +50,7 @@ for month in parsed_data['Mês'].unique():
 
     month_options.append({'label': month_key, 'value': month})
     
-app = Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
+app = Dash(external_stylesheets=[dbc.themes.BOOTSTRAP, dbc.icons.FONT_AWESOME])
 
 app.layout = dbc.Container([
     dbc.Container(
@@ -82,7 +82,16 @@ app.layout = dbc.Container([
                     value='all_months',
                     clearable=False,
                     id='month_team'
-            )),
+            )), 
+            dbc.Col(
+                [
+                    html.Label(className="fa fa-sun", htmlFor="theme_selector", style={'margin-right': '5px'}),
+                    dbc.Switch(value=False, id='theme_selector', className="custom-switch"),
+                    html.Label(className="fa fa-moon", htmlFor="theme_selector", style={'margin-left': '5px'}),
+                ],
+                width={'size': 2},
+                className="d-flex align-items-center"
+            ),
         ],
         className="w-75 g-2 mx-auto flex-nowrap mt-3 mt-md-0",
         align="center",
@@ -180,112 +189,155 @@ app.layout = dbc.Container([
 
 ], fluid=True)
 
-@callback(Output('top_consultants_plus_team_by_value_bar_chart', 'figure'), Input('top_consultants_plus_team_by_value_bar_chart', 'clickAnnotationData'))
-def update_graph_top_consultants_plus_team_by_value_bar_chart(clickAnnotationData):
+@callback(
+    Output('top_consultants_plus_team_by_value_bar_chart', 'figure'),
+    Input('top_consultants_plus_team_by_value_bar_chart', 'clickAnnotationData'),
+    Input('theme_selector', 'value'))
+def update_graph_top_consultants_plus_team_by_value_bar_chart(clickAnnotationData, theme):
     data = parsed_data.groupby(['Equipe', 'Consultor'])['Valor Pago'].sum()
     data = data.sort_values(ascending=False)
     data = data.groupby('Equipe').head(1).reset_index()
-    return graph_top_consultants_plus_team_by_value_bar_chart(data)
+    return graph_top_consultants_plus_team_by_value_bar_chart(data, theme)
 
-@callback(Output('team_sales', 'figure'),Input('team_sales', 'clickAnnotationData'))
-def update_graph_team_sales(clickAnnotationData):
+@callback(
+    Output('team_sales', 'figure'),
+    Input('team_sales', 'clickAnnotationData'),
+    Input('theme_selector', 'value'))
+def update_graph_team_sales(clickAnnotationData, theme):
     data = parsed_data.groupby('Equipe')['Valor Pago'].sum().reset_index()
-    return graph_team_sales(data)
+    return graph_team_sales(data, theme)
 
 @callback(
         Output('average_calls_by_days_of_the_month', 'figure'), 
         Input('average_calls_by_days_of_the_month', 'clickAnnotationData'),
-        Input('current_team', 'value'))
-def update_graph_average_calls_by_days_of_the_month(clickAnnotationData, value):
+        Input('current_team', 'value'),
+        Input('theme_selector', 'value'))
+def update_graph_average_calls_by_days_of_the_month(clickAnnotationData, value, theme):
     if value == 'all_teams':
         data = parsed_data.groupby('Dia')['Chamadas Realizadas'].sum().reset_index()
     else:
         data = parsed_data[parsed_data['Equipe'] == value]
         data = data.groupby('Dia')['Chamadas Realizadas'].sum().reset_index()
-    return graph_average_calls_by_days_of_the_month(data)
+    return graph_average_calls_by_days_of_the_month(data, theme)
 
 @callback(
         Output('average_calls_by_month', 'figure'), 
         Input('average_calls_by_month', 'clickAnnotationData'),
-        Input('current_team', 'value'))
-def update_graph_average_calls_by_month(clickAnnotationData, value):
+        Input('current_team', 'value'),
+        Input('theme_selector', 'value'))
+def update_graph_average_calls_by_month(clickAnnotationData, value, theme):
     if value == 'all_teams':
         data = parsed_data.groupby('Mês')['Chamadas Realizadas'].sum().reset_index()
     else:
         data = parsed_data[parsed_data['Equipe'] == value]
         data = data.groupby('Mês')['Chamadas Realizadas'].sum().reset_index()
-    return graph_average_calls_by_month(data)
+    return graph_average_calls_by_month(data, theme)
 
 @callback(
     Output('amounts_paid_through_advertising', 'figure'),
     Input('amounts_paid_through_advertising', 'hoverData'),
-    Input('current_team', 'value'))
-def update_graph_amounts_paid_through_advertising(hoverData, value):
+    Input('current_team', 'value'),
+    Input('theme_selector', 'value'))
+def update_graph_amounts_paid_through_advertising(hoverData, value, theme):
     if value == 'all_teams':
         data = parsed_data.groupby(['Meio de Propaganda', 'Mês'])['Valor Pago'].sum().reset_index()
     else:
         data = parsed_data[parsed_data['Equipe'] == value]
         data = data.groupby(['Meio de Propaganda', 'Mês'])['Valor Pago'].sum().reset_index()
-    return graph_amounts_paid_through_advertising(data)
+    return graph_amounts_paid_through_advertising(data, theme)
 
 @callback(
     Output('advertising_on_piechart', 'figure'),
     Input('advertising_on_piechart', 'clickAnnotationData'),
-    Input('current_team', 'value'))
-def update_graph_advertising_on_piechart(clickAnnotationData, value):
+    Input('current_team', 'value'),
+    Input('theme_selector', 'value'))
+def update_graph_advertising_on_piechart(clickAnnotationData, value, theme):
     if value == 'all_teams':
         data = parsed_data.groupby('Meio de Propaganda')['Valor Pago'].sum().reset_index()
     else:
         data = parsed_data[parsed_data['Equipe'] == value]
         data = data.groupby('Meio de Propaganda')['Valor Pago'].sum().reset_index()
-    return graph_advertising_on_piechart(data)
+    return graph_advertising_on_piechart(data, theme)
 
-@callback(Output('earnings_per_month_plus_segregation_by_team', 'figure'), Input('earnings_per_month_plus_segregation_by_team', 'clickAnnotationData'))
-def update_graph_earnings_per_month_plus_segregation_by_team(clickAnnotationData):
+@callback(
+    Output('earnings_per_month_plus_segregation_by_team', 'figure'),
+    Input('earnings_per_month_plus_segregation_by_team', 'clickAnnotationData'),
+    Input('theme_selector', 'value'))
+def update_graph_earnings_per_month_plus_segregation_by_team(clickAnnotationData, theme):
     df5 = parsed_data.groupby(['Mês', 'Equipe'])['Valor Pago'].sum().reset_index()
     df5_group = parsed_data.groupby('Mês')['Valor Pago'].sum().reset_index()
-    return graph_earnings_per_month_plus_segregation_by_team(df5, df5_group)
+    return graph_earnings_per_month_plus_segregation_by_team(df5, df5_group, theme)
 
-@callback(Output('paid_and_not_paid', 'figure'), Input('paid_and_not_paid', 'clickAnnotationData'))
-def update_graph_paid_and_not_paid(clickAnnotationData):
+@callback(
+    Output('paid_and_not_paid', 'figure'),
+    Input('paid_and_not_paid', 'clickAnnotationData'),
+    Input('theme_selector', 'value'))
+def update_graph_paid_and_not_paid(clickAnnotationData, theme):
     data = parsed_data.groupby('Status de Pagamento')['Chamadas Realizadas'].sum()
-    return graph_paid_and_not_paid(data)
+    return graph_paid_and_not_paid(data, theme)
 
-@callback(Output('indicators_best_consultant', 'figure'), Input('indicators_best_consultant', 'clickAnnotationData'))
-def update_graph_indicators_best_consultant(clickAnnotationData):
+@callback(
+    Output('indicators_best_consultant', 'figure'),
+    Input('indicators_best_consultant', 'clickAnnotationData'),
+    Input('theme_selector', 'value'))
+def update_graph_indicators_best_consultant(clickAnnotationData, theme):
     data = parsed_data.groupby(['Consultor', 'Equipe'])['Valor Pago'].sum()
     data.sort_values(ascending=False, inplace=True)
     data = data.reset_index()
-    return graph_indicators_best_consultant(data)
+    return graph_indicators_best_consultant(data, theme)
 
-@callback(Output('indicators_best_equip', 'figure'), Input('indicators_best_equip', 'clickAnnotationData'))
-def update_graph_indicators_best_equip(clickAnnotationData):
+@callback(
+    Output('indicators_best_equip', 'figure'),
+    Input('indicators_best_equip', 'clickAnnotationData'),
+    Input('theme_selector', 'value'))
+def update_graph_indicators_best_equip(clickAnnotationData, theme):
     data = parsed_data.groupby('Equipe')['Valor Pago'].sum()
     data.sort_values(ascending=False, inplace=True)
     data = data.reset_index()
-    return graph_indicators_best_equip(data)
+    return graph_indicators_best_equip(data, theme)
 
 @callback(
     Output('indicators_total_earnings', 'figure'), 
     Input('indicators_total_earnings', 'clickAnnotationData'),
-    Input('current_team', 'value'))
-def update_graph_indicators_total_earnings(clickAnnotationData, value):
+    Input('current_team', 'value'),
+    Input('theme_selector', 'value'))
+def update_graph_indicators_total_earnings(clickAnnotationData, value, theme):
     if value == 'all_teams':
         data = parsed_data
     else:
         data = parsed_data[parsed_data['Equipe'] == value]
-    return graph_indicators_total_earnings(data)
+    return graph_indicators_total_earnings(data, theme)
 
-@callback(Output('indicators_total_calls', 'figure'), Input('indicators_total_calls', 'clickAnnotationData'))
-def update_graph_indicators_total_calls(clickAnnotationData):
-    return graph_indicators_total_calls(parsed_data)
+@callback(
+    Output('indicators_total_calls', 'figure'),
+    Input('indicators_total_calls', 'clickAnnotationData'),
+    Input('theme_selector', 'value'))
+def update_graph_indicators_total_calls(clickAnnotationData, theme):
+    return graph_indicators_total_calls(parsed_data, theme)
 
-@callback(Output('top_consultants_plus_team_by_value', 'figure'), Input('top_consultants_plus_team_by_value', 'clickAnnotationData'))
-def update_graph_top_consultants_plus_team_by_value(clickAnnotationData):
+@callback(
+    Output('top_consultants_plus_team_by_value', 'figure'),
+    Input('top_consultants_plus_team_by_value', 'clickAnnotationData'),
+    Input('theme_selector', 'value'))
+def update_graph_top_consultants_plus_team_by_value(clickAnnotationData, theme):
     data = parsed_data.groupby(['Equipe', 'Consultor'])['Valor Pago'].sum()
     data = data.sort_values(ascending=False)
     data = data.groupby('Equipe').head(1).reset_index()
-    return graph_top_consultants_plus_team_by_value(data)
+    return graph_top_consultants_plus_team_by_value(data, theme)
+
+
+clientside_callback(
+    """
+    (switchOn) => {
+       switchOn
+         ? document.documentElement.setAttribute('data-bs-theme', 'dark')
+         : document.documentElement.setAttribute('data-bs-theme', 'light')
+       return window.dash_clientside.no_update
+    }
+    """,
+    Output("theme_selector", "id"),
+    Input("theme_selector", "value"),
+)
 
 server = app.server
 

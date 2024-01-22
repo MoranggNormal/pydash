@@ -1,7 +1,6 @@
 import plotly.graph_objects as go
-from utils import graph_title
 
-def graph_team_sales(dataframe):
+def graph_team_sales(dataframe, theme):
     fig = go.Figure(go.Bar(
         x=dataframe['Valor Pago'],
         y=dataframe['Equipe'],
@@ -10,5 +9,8 @@ def graph_team_sales(dataframe):
         text=dataframe['Valor Pago'],
         insidetextfont=dict(family='Times', size=12)
     ))
+
+    if theme:
+        fig.update_layout(template="plotly_dark")
     
     return fig
