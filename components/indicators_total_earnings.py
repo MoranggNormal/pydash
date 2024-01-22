@@ -8,6 +8,4 @@ def graph_indicators_total_earnings(dataframe):
             value = dataframe['Valor Pago'].sum(),
             number = {'prefix': "R$"}
     ))
-    fig.update_layout(title=graph_title("Indicators - Ganhos Totais"))
-    
     return fig

@@ -93,28 +93,29 @@ app.layout = dbc.Container([
             dbc.Card([
                 dbc.Row([
                     dbc.Col(
-                        dcc.Graph(id='top_consultants_plus_team_by_value_bar_chart'),
-                        width={'size': 12},  md={'size': 6}
+                        dcc.Graph(id='top_consultants_plus_team_by_value_bar_chart', style={"height": "300px"}),
+                        width={'size': 12},  md={'size': 9}
                     ),
                     dbc.Col(
-                        dcc.Graph(id='top_consultants_plus_team_by_value'),
-                        width={'size': 12}, md={'size': 6}
+                        dcc.Graph(id='top_consultants_plus_team_by_value', style={"height": "300px"}),
+                        width={'size': 12}, md={'size': 3}
                     ),
                 ]),
                 ],
             ), className="mx-auto"
         ),
-        className="w-100 mt-5 mx-auto"
+        className="mt-5 mx-auto"
     ),
         
     dbc.Row([
         dbc.Col(
             dbc.Row([
                 dbc.Card(
-                    dcc.Graph(id="average_calls_by_days_of_the_month"),
+                    dcc.Graph(id="average_calls_by_days_of_the_month", style={"height": "300px"}),
+                    className="mt-2"
                 ),
                 dbc.Card(
-                    dcc.Graph(id="average_calls_by_month"),
+                    dcc.Graph(id="average_calls_by_month", style={"height": "300px"}),
                     className="mt-2",
                 ),
             ]),
@@ -124,12 +125,12 @@ app.layout = dbc.Container([
             dbc.Row([
                 dbc.Col(
                     dbc.Card(
-                        dcc.Graph(id="team_sales"),
+                        dcc.Graph(id="team_sales", style={"height": "300px"}), className="mt-2",
                     ),
                 width={"size": 12}),
                 dbc.Col(
                     dbc.Card(
-                        dcc.Graph(id="earnings_per_month_plus_segregation_by_team"),
+                        dcc.Graph(id="earnings_per_month_plus_segregation_by_team", style={"height": "300px"}),
                         className="mt-2"
                     ),
                 width={"size": 12}),
@@ -139,25 +140,43 @@ app.layout = dbc.Container([
         dbc.Col(
             dbc.Row([
                 dbc.Card(
-                    dcc.Graph(id="indicators_best_consultant"),
+                    dcc.Graph(id="indicators_best_consultant", style={"height": "300px"}),
+                    className="mt-2"
                 ),
                 dbc.Card(
-                    dcc.Graph(id="indicators_best_equip"),
+                    dcc.Graph(id="indicators_best_equip", style={"height": "300px"}),
                     className="mt-2"
                 ),
             ]),
             width={"size": 12}, md={"size":3},
         ),
         ],
-        className="w-100 mx-auto mt-5",
+        className="mx-auto mt-2",
     ),
-
+    
+    dbc.Row([
+        dbc.Col(
+            dbc.Card(
+                dcc.Graph(id='advertising_on_piechart', style={"height": "300px"})
+            ),
+            width={"size": 12}, md={"size": 3},
+        ),
+        dbc.Col(
+            dbc.Card(
+                dcc.Graph(id='amounts_paid_through_advertising', style={"height": "300px"})
+            ),
+            width={"size": 12}, md={"size": 6},
+        ),
+        dbc.Col(
+            dbc.Card(
+                dcc.Graph(id='indicators_total_earnings', style={"height": "300px"})
+            ),
+            width={"size": 12}, md={"size": 3},
+        ),
+    ], className="g-2 mx-auto my-2"),
         
-    dcc.Graph(id='amounts_paid_through_advertising'),
-    dcc.Graph(id='advertising_on_piechart'),
-    dcc.Graph(id='paid_and_not_paid'),
-    dcc.Graph(id='indicators_total_earnings'),
-    dcc.Graph(id='indicators_total_calls'),
+    # dcc.Graph(id='paid_and_not_paid'),
+    # dcc.Graph(id='indicators_total_calls'),
 
 ], fluid=True)
 
