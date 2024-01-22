@@ -85,7 +85,7 @@ app.layout = dbc.Container([
             )), 
             dbc.Col(
                 [
-                    html.Label(className="fa fa-sun", htmlFor="theme_selector", style={'margin-right': '5px'}),
+                    html.Label(className="fa fa-sun", htmlFor="theme_selector", style={'margin-right': '10px'}),
                     dbc.Switch(value=False, id='theme_selector', className="custom-switch"),
                     html.Label(className="fa fa-moon", htmlFor="theme_selector", style={'margin-left': '5px'}),
                 ],
