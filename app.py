@@ -53,20 +53,16 @@ for month in parsed_data['Mês'].unique():
 app = Dash(external_stylesheets=[dbc.themes.BOOTSTRAP, dbc.icons.FONT_AWESOME])
 
 app.layout = dbc.Container([
-    dbc.Container(
-        [
-            html.A(
-                dbc.Row(
-                    [
-                        dbc.Col(dbc.NavbarBrand("Python Dash")),
-                    ],
-                    className="g-0",
-                ),
-                href="https://github.com/MoranggNormal/pydash",
-                style={"textDecoration": "none"},
-            ),
-            ], className="my-5"
-        ),
+    
+    dbc.Row([
+        html.A(
+            html.H1("Python Dash"),
+            href="https://github.com/MoranggNormal/pydash",
+            style={"textDecoration": "none"},
+        ),     
+    ], className="w-75 mx-auto my-5"),
+    
+    
 
     dbc.Row([
             dbc.Col(
